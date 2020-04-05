@@ -61,7 +61,7 @@ You **must run `srb-duck` before every time you run `srb tc`** to regenerate
 which runs one after the other.
 
 ## Implementation
-First of all, no aqautic waterfowl were harmed in the creation of this gem.
+First of all, no waterfowl were harmed in the creation of this gem.
 
 This works by generating an interface for each defined duck type (like
 `HasLength` in that usage example), and then implementing that interface for any
