@@ -6,19 +6,6 @@ require_relative 'lib/interface_implementer'
 require_relative 'lib/duck_interface'
 require_relative 'lib/duck_definition_finder'
 
-# interfaces = [
-#   DuckInterface.new(
-#     'HasLength',
-#     Parlour::RbiGenerator::Method.new(
-#       Parlour::DetachedRbiGenerator.new,
-#       'length',
-#       [],
-#       'Integer',
-#       abstract: true,
-#     )
-#   )
-# ]
-
 interfaces = DuckDefinitionFinder.find_all_definitions
 
 # Create a new RBI with the "duck" method
