@@ -35,7 +35,7 @@ module InterfaceImplementer
 
     # Pick out the Duck interface names and target type names
     duck_interfaces_and_targets = unimplemented_duck_diagnostics.map do |x|
-      raise 'malformed message' unless /^Expected `(?:[^`]+::)*Duck::(.+)` but found `([A-Za-z0-9_:]+)/ === x['message']
+      raise 'malformed message' unless /^Expected `(?:[^`]+::)*Duck::(.+)` but found `(\[?[A-Za-z0-9_:]+)/ === x['message']
       interface, target = $1, $2
 
       # Special case: the T::Array-like enumerable objects are actually modules
@@ -43,6 +43,11 @@ module InterfaceImplementer
       # the real classes instead
       if ['T::Array', 'T::Hash', 'T::Set', 'T::Enumerable', 'T::Enumerator', 'T::Range'].include?(target)
         target.gsub!('T::', '')
+      end
+
+      # Special case: a literal array may have a type shown as "[...]"
+      if target.start_with?('[')
+        target = 'Array'
       end
 
       [interface, target]
