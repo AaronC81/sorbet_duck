@@ -1,12 +1,12 @@
 #!/usr/bin/env ruby
 # typed: ignore
 
+require 'bundler/setup'
+require 'sorbet_duck'
 require 'parlour'
-require_relative 'lib/interface_implementer'
-require_relative 'lib/duck_interface'
-require_relative 'lib/duck_definition_finder'
 
-interfaces = DuckDefinitionFinder.find_all_definitions
+# Find all Duck interfaces
+interfaces = SorbetDuck::DuckDefinitionFinder.find_all_definitions
 
 # Create a new RBI with the "duck" method
 gen = Parlour::RbiGenerator.new(
@@ -24,7 +24,7 @@ interfaces.each { |interface| interface.add_definition_to_namespace(gen.root) }
 File.write('duck.rb', gen.rbi('true'))
 
 # Implement interfaces on types where it's needed and rewrite types
-InterfaceImplementer.implement(
+SorbetDuck::InterfaceImplementer.implement(
   gen.root,
   interfaces
 )

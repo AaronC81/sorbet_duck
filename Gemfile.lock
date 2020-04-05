@@ -1,0 +1,46 @@
+PATH
+  remote: .
+  specs:
+    sorbet_duck (1.0.0)
+      ffast
+      parlour (~> 2.1)
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ast (2.4.0)
+    astrolabe (1.3.1)
+      parser (~> 2.2)
+    coderay (1.1.2)
+    commander (4.5.2)
+      highline (~> 2.0.0)
+    ffast (0.1.8)
+      astrolabe
+      coderay
+      parallel
+      parser
+      pry
+    highline (2.0.3)
+    method_source (1.0.0)
+    parallel (1.19.1)
+    parlour (2.1.0)
+      commander (~> 4.5)
+      parser
+      rainbow (~> 3.0)
+      sorbet-runtime (>= 0.5)
+    parser (2.7.1.0)
+      ast (~> 2.4.0)
+    pry (0.13.0)
+      coderay (~> 1.1)
+      method_source (~> 1.0)
+    rainbow (3.0.0)
+    sorbet-runtime (0.5.5497)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  sorbet_duck!
+
+BUNDLED WITH
+   2.0.2
