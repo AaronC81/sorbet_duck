@@ -1,0 +1,35 @@
+#!/usr/bin/env ruby
+# typed: ignore
+
+require 'parlour'
+require_relative 'lib/interface_implementer'
+require_relative 'lib/duck_interface'
+
+interfaces = [
+  DuckInterface.new(
+    'HasLength',
+    Parlour::RbiGenerator::Method.new(
+      Parlour::DetachedRbiGenerator.new,
+      'length',
+      [],
+      'Integer',
+      abstract: true,
+    )
+  )
+]
+
+gen = Parlour::RbiGenerator.new(
+  break_params: 4,
+  tab_size: 2,
+)
+interfaces.each { |interface| interface.add_definition_to_namespace(gen.root) }
+
+# Write now so that the constants actually resolve
+File.write('duck.rb', gen.rbi('true'))
+
+# Implement interfaces on types where it's needed and rewrite types
+InterfaceImplementer.implement(
+  gen.root,
+  interfaces
+)
+File.write('duck.rb', gen.rbi('true'))
