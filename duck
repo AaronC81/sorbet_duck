@@ -4,24 +4,33 @@
 require 'parlour'
 require_relative 'lib/interface_implementer'
 require_relative 'lib/duck_interface'
+require_relative 'lib/duck_definition_finder'
 
-interfaces = [
-  DuckInterface.new(
-    'HasLength',
-    Parlour::RbiGenerator::Method.new(
-      Parlour::DetachedRbiGenerator.new,
-      'length',
-      [],
-      'Integer',
-      abstract: true,
-    )
-  )
-]
+# interfaces = [
+#   DuckInterface.new(
+#     'HasLength',
+#     Parlour::RbiGenerator::Method.new(
+#       Parlour::DetachedRbiGenerator.new,
+#       'length',
+#       [],
+#       'Integer',
+#       abstract: true,
+#     )
+#   )
+# ]
 
+interfaces = DuckDefinitionFinder.find_all_definitions
+
+# Create a new RBI with the "duck" method
 gen = Parlour::RbiGenerator.new(
   break_params: 4,
   tab_size: 2,
 )
+gen.root.create_method('duck', parameters: [
+  Parlour::RbiGenerator::Parameter.new('interface_name', type: 'Symbol'),
+  Parlour::RbiGenerator::Parameter.new('method_name', type: 'Symbol'),
+  Parlour::RbiGenerator::Parameter.new('&blk', type: 'T.proc.bind(T::Private::Methods::DeclBuilder).returns(T.untyped)')
+])
 interfaces.each { |interface| interface.add_definition_to_namespace(gen.root) }
 
 # Write now so that the constants actually resolve

@@ -5,7 +5,7 @@ require_relative 'lsp_client'
 module InterfaceImplementer
   def self.run_lsp_diagnostics
     # TODO: hangs if there aren't any errors
-    pipe = IO.popen(['srb', 'tc', '--lsp', '.'], 'r+')
+    pipe = IO.popen(['srb', 'tc', '--lsp'], 'r+')
     LspClient.send_request(pipe, 'initialize', {
       processId: nil,
       rootUri: nil,
@@ -30,12 +30,12 @@ module InterfaceImplementer
     # Find all cases where the Duck interface exists but may not have been
     # implemented for a type
     unimplemented_duck_diagnostics = diagnostics.select do |x|
-      x['code'] == 7002 && x['message'].start_with?('Expected `Duck::')
+      x['code'] == 7002 && /Expected `([^`]+::)*Duck::[A-Za-z0-9_]+`/ === x['message']
     end
 
     # Pick out the Duck interface names and target type names
     duck_interfaces_and_targets = unimplemented_duck_diagnostics.map do |x|
-      raise 'malfored message' unless /^Expected `Duck::(.+)` but found `([A-Za-z0-9_:]+)/ === x['message']
+      raise 'malformed message' unless /^Expected `(?:[^`]+::)*Duck::(.+)` but found `([A-Za-z0-9_:]+)/ === x['message']
       interface, target = $1, $2
 
       # Special case: the T::Array-like enumerable objects are actually modules
